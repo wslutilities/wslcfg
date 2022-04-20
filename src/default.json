@@ -1,0 +1,59 @@
+{
+  "automount": {
+    "_friendly_name": "Auto-Mount",
+    "enabled": {
+      "_friendly_name": "Enabled",
+      "default": "true",
+      "type": "bool",
+      "tip": "Whether the Auto-Mount freature is enabled. This feature allows you to mount Windows drive in WSL."
+    },
+    "mountfstab": {
+      "_friendly_name": "Mount `/etc/fstab`",
+      "default": "true",
+      "type": "bool",
+      "tip": "Whether `/etc/fstab` will be mounted. The configuration file `/etc/fstab` contains the necessary information to automate the process of mounting partitions. "
+    },
+    "root": {
+      "_friendly_name": "Auto-Mount Location",
+      "default": "/mnt/",
+      "type": "path",
+      "tip": "This is the location where the Windows Drive will be auto-mounting to. It is `/mnt/` by default."
+    },
+    "options": {
+      "_friendly_name": "Auto-Mount Option",
+      "default": "",
+      "type": "mount",
+      "tip": "This is the options you want to pass when the Windows Drive  auto-mounting. Please refer to <https://docs.microsoft.com/en-us/windows/wsl/wsl-config#mount-options> For the detailed input."
+    }
+  },
+  "network": {
+    "_friendly_name": "Network",
+    "generatehosts": {
+      "_friendly_name": "Generate /etc/hosts",
+      "default": "true",
+      "type": "bool",
+      "tip": "Whether generate /etc/hosts at each startup."
+    },
+    "generateresolvconf": {
+      "_friendly_name": "Generate /etc/resolv.conf",
+      "default": "true",
+      "type": "bool",
+      "tip": "Whether generate /etc/resolv.conf at each startup."
+    }
+  },
+  "interop": {
+    "_friendly_name": "Interoperability",
+    "enabled": {
+      "_friendly_name": "Enabled",
+      "default": "true",
+      "type": "bool",
+      "tip": "Whether the interoperability is enabled."
+    },
+    "appendwindowspath": {
+      "_friendly_name": "Append Windows Path",
+      "default": "true",
+      "type": "bool",
+      "tip": "Whether Windows Path will be append in the PATH environment variable in WSL."
+    }
+  }
+}
