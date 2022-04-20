@@ -12,7 +12,7 @@ const WSLCONF_LOC: &str = "wsl.conf";
 
 fn get_default_set() -> structures::CoreDict {
     let default_file =
-        File::open("src/default.json")
+        File::open("ext/default.json")
             .expect("failed to read file");
     let reader = BufReader::new(default_file);
     let default_set: structures::CoreDict =
