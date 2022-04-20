@@ -5,15 +5,15 @@ use serde::Serialize;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WSLOptions {
-    _friendly_name: String,
-    default: String,
-    def: String,
-    tip: String
+    pub _friendly_name: String,
+    pub default: String,
+    pub def: String,
+    pub tip: String
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WSLSections {
-    _friendly_name: String,
+    pub _friendly_name: String,
     pub(crate) options: HashMap<String, WSLOptions>
 }
 

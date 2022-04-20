@@ -8,7 +8,11 @@ use std::path::Path;
 use configparser::ini::Ini;
 use serde_json;
 
-const WSLCONF_LOC: &str = "wsl.conf";
+#[cfg(not(debug_assertions))]
+const WSLCONF_LOC: &str = "/etc/wsl.conf";
+
+#[cfg(debug_assertions)]
+const WSLCONF_LOC: &str = "tests/wsl.conf";
 
 fn get_default_set() -> structures::CoreDict {
     let default_file =
@@ -25,19 +29,29 @@ fn get_default_set() -> structures::CoreDict {
 fn main() {
     let args: Vec<String> = env::args().collect();
     println!("{:?}", args);
-    let mut conf = Ini::new();
-    if Path::new(WSLCONF_LOC).exists(){
-        conf.load(WSLCONF_LOC).unwrap();
-    }
 
+    let mut conf = Ini::new();
     let default_set = get_default_set();
 
     for section in default_set {
         let sect_name = section.0.as_str();
-        let sect_opts = section.1;
-        for item in sect_opts.options {
+        for item in section.1.options {
             let opt_name = item.0.as_str();
-            println!("{} with {}", sect_name, opt_name);
+            let opt_var = item.1.default.as_str();
+            conf.setstr(sect_name, opt_name, Some(opt_var));
         }
     }
+
+    if Path::new(WSLCONF_LOC).exists(){
+        conf.load(WSLCONF_LOC).unwrap();
+    }
+
+    for (section, options) in conf.get_map().unwrap() {
+        let sect_name = section;
+        for (item_name, item_var) in options {
+            println!("{} - {}: {}", sect_name, item_name, item_var.unwrap());
+        }
+    }
+
+    //This is used for getting type and things
 }
