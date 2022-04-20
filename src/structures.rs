@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WSLOptions {
     pub _friendly_name: String,
     pub default: String,
@@ -11,7 +11,7 @@ pub struct WSLOptions {
     pub tip: String
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WSLSections {
     pub _friendly_name: String,
     pub(crate) options: HashMap<String, WSLOptions>

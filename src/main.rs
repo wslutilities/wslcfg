@@ -26,32 +26,97 @@ fn get_default_set() -> structures::CoreDict {
     return default_set;
 }
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
-    println!("{:?}", args);
+fn interact(cmd: &str, _args: Vec<String>) {
+    let mut c = Ini::new();
 
-    let mut conf = Ini::new();
-    let default_set = get_default_set();
-
-    for section in default_set {
+    for section in get_default_set() {
         let sect_name = section.0.as_str();
         for item in section.1.options {
             let opt_name = item.0.as_str();
             let opt_var = item.1.default.as_str();
-            conf.setstr(sect_name, opt_name, Some(opt_var));
+            c.setstr(sect_name, opt_name, Some(opt_var));
         }
     }
 
     if Path::new(WSLCONF_LOC).exists(){
-        conf.load(WSLCONF_LOC).unwrap();
+        c.load(WSLCONF_LOC).unwrap();
     }
 
-    for (section, options) in conf.get_map().unwrap() {
-        let sect_name = section;
-        for (item_name, item_var) in options {
-            println!("{} - {}: {}", sect_name, item_name, item_var.unwrap());
+    match cmd {
+        "help"=>{
+            if _args.len() == 3 {
+                let tmp_name = _args[2].as_str();
+                let tmp_name_set: Vec<&str> = tmp_name.split(".").collect();
+                if tmp_name_set.len() != 2{
+                    println!("ERROR: Not a valid settings name");
+                    return;
+                }
+                let config_name = tmp_name_set[0];
+                let options_name = tmp_name_set[1];
+                for section in get_default_set() {
+                    let sect_name = section.0.as_str();
+                    if sect_name == config_name {
+                        for item in section.1.options {
+                            let opt_name = item.0.as_str();
+                            if opt_name == options_name {
+
+                                println!("{}.{} ({})", config_name, options_name,
+                                         item.1.def);
+                                println!("Friendly Name: {} > {}",
+                                         section.1._friendly_name,
+                                         item.1._friendly_name);
+                                println!("Default: {}\n", item.1.default);
+                                println!("{}", item.1.tip);
+                                return;
+                            }
+                        }
+                    }
+                }
+                println!("ERROR: Not a valid settings name");
+            } else {
+                println!("wslcfg [list|set|reset|get]");
+            }
+
+        },
+        "list"=> {
+            for (section, options) in c.get_map().unwrap() {
+                let sect_name = section;
+                for (item_name, item_var) in options {
+                    println!("{}.{}: {}", sect_name, item_name, item_var.unwrap());
+                }
+            }
+        },
+/*        "get" => {
+            let value = conf.get(section, option).unwrap();
+            if valueOnly {
+                println!("{}", value);
+            } else {
+                println!("{}.{}: {}", section, option, value);
+            }
+        },*/
+        _=> {
+            println!("Unknown command");
+            println!("wslcfg [list|set|reset|get]");
         }
-    }
 
+    }
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() >= 2 {
+        let cmd = args[1].as_str();
+
+        match cmd{
+            "version"=>{
+                println!("wslcfg v{}", env!("CARGO_PKG_VERSION"));
+            },
+            _=>{
+                interact(cmd, args.clone());
+            }
+        }
+    } else {
+        println!("wslcfg [list|set|reset|get]");
+    }
     //This is used for getting type and things
 }
