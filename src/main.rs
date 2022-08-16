@@ -6,7 +6,6 @@ use std::io::BufReader;
 use std::path::Path;
 
 use configparser::ini::Ini;
-use serde_json;
 
 #[cfg(not(debug_assertions))]
 const WSLCONF_LOC: &str = "/etc/wsl.conf";
@@ -23,8 +22,9 @@ fn get_default_set() -> structures::CoreDict {
         serde_json::from_reader(reader)
             .expect("JSON was not well-formatted");
 
-    return default_set;
+    default_set
 }
+
 
 fn interact(cmd: &str, _args: Vec<String>) {
     let mut c = Ini::new();
@@ -46,7 +46,7 @@ fn interact(cmd: &str, _args: Vec<String>) {
         "help"=>{
             if _args.len() == 3 {
                 let tmp_name = _args[2].as_str();
-                let tmp_name_set: Vec<&str> = tmp_name.split(".").collect();
+                let tmp_name_set: Vec<&str> = tmp_name.split('.').collect();
                 if tmp_name_set.len() != 2{
                     println!("ERROR: Not a valid settings name");
                     return;
