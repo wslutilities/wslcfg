@@ -1,6 +1,6 @@
-# wslconf
+# wslcfg
 
-This is a component of wslu that allows you to set `wsl.conf`.
+This is a component of wslu that allows you to edit `wsl.conf`.
 
 ## Build
 
